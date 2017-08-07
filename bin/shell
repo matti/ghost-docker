@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+set -e
+
+docker-compose run --entrypoint /bin/sh web
+docker-compose exec web sh

@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+set -e
+
+docker-compose up -d --build --force-recreate web
+docker-compose logs web
+docker attach ghost_web_1

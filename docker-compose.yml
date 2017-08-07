@@ -1,0 +1,47 @@
+version: '2.1'
+
+services:
+  web:
+    image: ghost
+    build: .
+    tty: true
+    stdin_open: true
+    environment:
+      - NODE_ENV=production
+      - url=http://localhost:8080
+      #- admin__url=http://admin.example.net
+      - database__client=mysql
+      - database__connection__host=mysql
+      - database__connection__user=ghost
+      - database__connection__password=ghost
+      - database__connection__database=ghost_production
+      - server__port=8080
+      - server__host=0.0.0.0
+      - process=local
+      - paths__contentPath=/app/content
+      - storage__active=ghost-imgur
+    ports:
+      - 8080:8080
+    entrypoint: ["/app/entrypoint.sh"]
+    depends_on:
+      - mysql
+
+  shell:
+    image: ghost
+    entrypoint: /bin/sh
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0.1
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=ghost_production
+      - MYSQL_USER=ghost
+      - MYSQL_PASSWORD=ghost
+    volumes:
+      - ghost_mysql_data:/var/lib/mysql
+
+volumes:
+  ghost_mysql_data:
+    external: true
